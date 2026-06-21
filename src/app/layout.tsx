@@ -14,7 +14,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-background text-primary">
+      {/* Add suppressHydrationWarning here */}
+      <body className="bg-background text-primary" suppressHydrationWarning>
         <Navbar />
         <main className="pt-16">
           {children}
