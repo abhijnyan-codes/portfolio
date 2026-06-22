@@ -1,73 +1,165 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useTypewriter } from "@/hooks/useTypewriter";
+import "@/styles/hero.css";
 
 export default function Hero() {
+  const [mounted, setMounted] = useState(false);
+  const [mouseX, setMouseX] = useState(0);
+  const [article, setArticle] = useState("a");
+
+  const typedText = useTypewriter([
+    "Full Stack Developer",
+    "Open Source Contributor",
+    "AI Builder",
+    "Problem Solver",
+  ]);
+
+  useEffect(() => {
+    if (typedText.length > 0) {
+      const isVowel = /^[aeiou]/i.test(typedText);
+      setArticle(isVowel ? "an" : "a");
+    }
+  }, [typedText]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    // Only subtle horizontal parallax — no vertical so portrait stays grounded
+    const x = (e.clientX / window.innerWidth - 0.5) * 20;
+    setMouseX(x);
+  };
+
+  const navLinks = [
+    { label: "/ GitHub",   href: "https://github.com/abhijnyan-codes" },
+    { label: "/ LinkedIn", href: "https://www.linkedin.com/in/abhijnyan-saikia-458400298/" },
+    { label: "/ Resume",   href: "/resume.pdf" },
+  ];
+
   return (
-    <section className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden px-6">
-      {/* Subtle Pink Glow Background using the utility we made earlier */}
-      <div className="absolute inset-0 bg-glow -z-10" />
+    <section className="hero-section" onMouseMove={handleMouseMove}>
 
-      <div className="max-w-4xl mx-auto text-center z-10">
-        {/* Appwrite-style Open Source Pill */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-bg-secondary/50 text-secondary text-sm font-medium mb-8 hover:border-accent/50 transition-colors cursor-pointer"
-        >
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
-          </span>
-          🚀 5+ Merged Open Source PRs <span className="text-accent ml-1">→</span>
-        </motion.div>
+      {/* LAYER 0: ATMOSPHERE */}
+      <div className="hero-glow-ambient" />
+      <div className="hero-glow-core" />
+      <div className="hero-vignette" />
 
-        {/* Main Heading */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-5xl md:text-7xl font-bold tracking-tight text-primary mb-6"
-        >
-          Building software, <br className="hidden md:block" />
-          solving problems, <br className="hidden md:block" />
-          and contributing to open source<span className="text-accent">_</span>
-        </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-lg md:text-xl text-secondary max-w-2xl mx-auto mb-10 leading-relaxed"
-        >
-          CSE Student at NIT Silchar. Focused on Full Stack Development,
-          Data Structures & Algorithms, and Open Source.
-        </motion.p>
-
-        {/* Call to Action Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          <Link
-            href="#projects"
-            className="w-full sm:w-auto px-8 py-3.5 bg-accent text-white font-medium rounded-lg hover:bg-accent-light transition-colors text-center"
+      {/* LAYER 1: GREETING — always above portrait */}
+      <div className="hero-greeting-layer">
+        <div className="hero-typography-container">
+          <motion.div
+            className="hero-greeting-block"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
           >
-            View Projects
-          </Link>
-          <Link
-            href="/resume.pdf"
-            className="w-full sm:w-auto px-8 py-3.5 bg-transparent border border-border text-primary font-medium rounded-lg hover:bg-bg-secondary transition-colors text-center"
-          >
-            Download Resume
-          </Link>
-        </motion.div>
+            <span className="hero-greeting">Hey 👋, I'm {article}</span>
+            <span className="hero-role"> {typedText}</span>
+            <motion.span
+              className="hero-cursor"
+              animate={{ opacity: [1, 0] }}
+              transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+            />
+          </motion.div>
+        </div>
       </div>
+
+      {/* LAYER 2: NAME BEHIND portrait (z-index 15, portrait is 20) */}
+      <div className="hero-name-layer">
+        <div className="hero-typography-container">
+          <motion.h1
+            className="hero-name"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            ABHIJNYAN SAIKIA
+          </motion.h1>
+        </div>
+      </div>
+
+      {/* LAYER 3: PORTRAIT — fixed to bottom, subtle x parallax only */}
+      <div className="hero-portrait-layer">
+        {mounted && (
+          <motion.img
+            className="hero-portrait"
+            src="/picture.png"
+            alt="Abhijnyan Saikia"
+            initial={{ y: 40, opacity: 0 }}
+            animate={{
+              y: 0,
+              opacity: 1,
+              x: mouseX,
+            }}
+            transition={{
+              y: { duration: 1.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] },
+              opacity: { duration: 1.2, delay: 0.2 },
+              x: { type: "spring", stiffness: 50, damping: 20 },
+            }}
+          />
+        )}
+      </div>
+
+      <div className="hero-bottom-fade" />
+
+      {/* LAYER 4: EDITORIAL UI */}
+      <div className="hero-ui-bottom-layer">
+
+        <motion.div
+          className="hero-contact-info"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+        >
+          <a href="mailto:hello@abhijnyan.dev" className="hero-email">E hello@abhijnyan.dev</a>
+          <span className="hero-location">L NIT Silchar, India</span>
+          <span className="hero-copyright">© {new Date().getFullYear()}</span>
+        </motion.div>
+
+        <motion.div
+          className="hero-bio-social-block"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          <p className="hero-bio">
+            I craft fast, scalable, and user-friendly web applications with modern frameworks — combining robust backend architecture with exceptionally clean UI.
+          </p>
+          <div className="hero-links">
+            {navLinks.map(({ label, href }) => (
+              <a key={label} href={href} className="hero-link">
+                {label.split("").map((char, i) => (
+                  <span
+                    key={i}
+                    className="hero-link-char"
+                    style={{ animationDelay: `${i * 0.04}s` }}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </span>
+                ))}
+              </a>
+            ))}
+          </div>
+        </motion.div>
+
+      </div>
+
+      <motion.div
+        className="hero-scroll"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.9 }}
+      >
+        <div className="hero-scroll-line" />
+        <span className="hero-scroll-label">SCROLL</span>
+      </motion.div>
+
+      <div className="hero-noise" />
+
     </section>
   );
 }

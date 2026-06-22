@@ -1,0 +1,327 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+/* ── Root ── */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: 700px;
+  background-color: #090909;
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* ════════════════════════════
+   LAYER 0: ATMOSPHERE
+════════════════════════════ */
+.hero-glow-ambient {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120vw;
+  height: 120vh;
+  /* Removed the heavy blue wash, replaced with a near-invisible neutral base */
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.01) 0%, transparent 65%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-glow-core {
+  position: absolute;
+  /* Anchored to the bottom, directly behind the portrait */
+  top: auto;
+  bottom: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70vw;
+  height: 70vh;
+  /* Concentrated Cyan glow just for the subject spotlight */
+  background: radial-gradient(circle, rgba(6,182,212,0.25) 0%, rgba(6,182,212,0.05) 40%, transparent 70%);
+  filter: blur(60px);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 30%, rgba(9,9,9,0.95) 100%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ════════════════════════════
+   LAYER 1: GREETING (above portrait)
+════════════════════════════ */
+.hero-greeting-layer {
+  position: absolute;
+  top: 18%;
+  left: 0;
+  width: 100%;
+  z-index: 45; /* Remains above everything */
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ════════════════════════════
+   LAYER 2: NAME (behind portrait)
+════════════════════════════ */
+.hero-name-layer {
+  position: absolute;
+  top: 22%;
+  left: 0;
+  width: 100%;
+  /* CHANGED: Lowered to 20 so the portrait (25) sits on top */
+  z-index: 20; 
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Shared container */
+.hero-typography-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 4vw;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.hero-greeting-block {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.hero-greeting {
+  color: #ffffff;
+  font-size: clamp(16px, 1.8vw, 22px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-right: 8px;
+}
+
+.hero-role {
+  color: #06b6d4;
+  font-size: clamp(16px, 1.8vw, 22px);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.hero-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: #06b6d4;
+  margin-left: 6px;
+}
+
+.hero-name {
+  font-family: 'Bebas Neue', Impact, sans-serif;
+  font-size: clamp(40px, 11vw, 180px);
+  letter-spacing: 0.02em;
+  line-height: 0.9;
+  margin: 0;
+  text-align: left;
+  white-space: nowrap;
+
+  /* CHANGED: Cyan to Frosty White gradient (No Pink) */
+  background: linear-gradient(135deg, #06b6d4 0%, #e0f2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ════════════════════════════
+   LAYER 3: FOCAL PORTRAIT
+════════════════════════════ */
+.hero-portrait-layer {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  /* INCREASED: Bumped to 85vh so it pushes higher into the text area */
+  height: 85vh; 
+  max-width: 900px;
+  /* CHANGED: Raised to 25 so it physically covers the text */
+  z-index: 25; 
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.hero-portrait {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 -10px 40px rgba(9,9,9,0.5)) contrast(1.15) brightness(0.95);
+}
+
+/* ════════════════════════════
+   OVERLAYS
+════════════════════════════ */
+.hero-bottom-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 35vh;
+  background: linear-gradient(to bottom, transparent 0%, rgba(9,9,9,0.85) 60%, #090909 100%);
+  z-index: 28; /* Adjusted to sit over the portrait's bottom edge */
+  pointer-events: none;
+}
+
+/* ════════════════════════════
+   LAYER 4: EDITORIAL UI
+════════════════════════════ */
+.hero-ui-bottom-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 30;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 40px 4vw;
+  pointer-events: none;
+}
+
+.hero-ui-bottom-layer > * {
+  pointer-events: auto;
+}
+
+.hero-contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hero-copyright,
+.hero-email,
+.hero-location {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.hero-email:hover {
+  color: #06b6d4;
+}
+
+.hero-bio-social-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 320px;
+  text-align: left;
+}
+
+.hero-bio {
+  color: #f4f4f5;
+  font-size: clamp(12px, 1vw, 14px);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  margin: 0 0 20px 0;
+}
+
+.hero-links {
+  display: flex;
+  gap: 16px;
+}
+
+/* ── Wave Link ── */
+.hero-link {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: inline-flex;
+  gap: 0;
+}
+
+.hero-link-char {
+  display: inline-block;
+  transition: color 0.2s ease;
+}
+
+.hero-link:hover .hero-link-char {
+  color: #06b6d4;
+  animation: waveChar 0.5s ease forwards;
+}
+
+@keyframes waveChar {
+  0%   { transform: translateY(0px); }
+  30%  { transform: translateY(-4px); }
+  60%  { transform: translateY(2px); }
+  100% { transform: translateY(0px); }
+}
+
+/* ── Scroll Indicator ── */
+.hero-scroll {
+  position: absolute;
+  right: 2vw;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 30;
+}
+
+.hero-scroll-line {
+  position: relative;
+  width: 1px;
+  height: 80px;
+  background: rgba(255,255,255,0.1);
+  overflow: hidden;
+}
+
+.hero-scroll-line::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 0;
+  width: 1px;
+  height: 50%;
+  background: linear-gradient(to bottom, transparent, #06b6d4 50%, transparent);
+  animation: scrollBeam 2s ease-in-out infinite;
+}
+
+@keyframes scrollBeam {
+  0%   { top: -50%; }
+  100% { top: 150%; }
+}
+
+.hero-scroll-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  font-weight: 600;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+/* ════════════════════════════
+   LAYER 5: FILM GRAIN
+════════════════════════════ */
+.hero-noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  z-index: 50;
+  pointer-events: none;
+}

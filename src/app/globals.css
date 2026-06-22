@@ -1,21 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0A0A0F;
+  --color-bg-secondary: #111118;
+  --color-accent: #FF4D8D;
+  --color-accent-light: #FFB6CC;
+  --color-primary: #FFFFFF;
+  --color-secondary: #A1A1AA;
+  --color-border: #24242E;
+}
 
 @layer base {
-  :root {
-    --bg-primary: #0A0A0F;
-    --bg-secondary: #111118;
-    --accent: #FF4D8D;
-    --accent-light: #FFB6CC;
-    --text-primary: #FFFFFF;
-    --text-secondary: #A1A1AA;
-    --border: #24242E;
-  }
-
   body {
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
+    background-color: var(--color-background);
+    color: var(--color-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
