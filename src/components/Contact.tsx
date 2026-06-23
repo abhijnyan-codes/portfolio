@@ -15,7 +15,7 @@ const socialLinks = [
   },
   {
     name: "LinkedIn",
-    url: "https://linkedin.com/in/your-profile", // Replace with your LinkedIn
+    url: "https://www.linkedin.com/in/abhijnyan-saikia-458400298/",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
@@ -24,18 +24,18 @@ const socialLinks = [
       </svg>
     )
   },
-  {
-    name: "X (Twitter)",
-    url: "https://twitter.com/your-profile", // Replace with your X handle
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.008 3.827H5.045z"/>
-      </svg>
-    )
-  },
+  // {
+  //   name: "X (Twitter)",
+  //   url: "https://twitter.com/your-profile", // Replace with your X handle
+  //   icon: (
+  //     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+  //       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.008 3.827H5.045z"/>
+  //     </svg>
+  //   )
+  // },
   {
     name: "Instagram",
-    url: "https://instagram.com/your-profile", // Replace with your Instagram
+    url: "https://www.instagram.com/abhijnyan.404/", 
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
@@ -46,7 +46,7 @@ const socialLinks = [
   },
   {
     name: "Discord",
-    url: "https://discord.com/users/your-id", // Replace with your Discord invite/ID
+    url: "https://discord.com/users/abhijnyan_s9", // Replace with your Discord invite/ID
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
         <path d="M19.22 4.13c-1.35-.61-2.81-1.05-4.34-1.28-.2-.36-.42-.78-.58-1.15-1.57-.24-3.13-.24-4.66 0-.17.37-.39.8-.59 1.15-1.53.23-2.99.67-4.34 1.28-2.73 4.14-3.48 8.16-3.13 12.11 1.8 1.34 3.53 2.15 5.23 2.65.42-.58.81-1.19 1.15-1.83-.8-.3-1.57-.68-2.28-1.12.19-.14.38-.28.56-.43 3.4 1.57 7.07 1.57 10.43 0 .19.15.38.29.57.43-.72.44-1.49.82-2.3 1.12.35.64.74 1.25 1.16 1.83 1.7-.5 3.44-1.31 5.23-2.65.4-4.31-.6-8.29-3.09-12.11zm-10.74 9.1c-.88 0-1.61-.81-1.61-1.79s.71-1.79 1.61-1.79c.9 0 1.62.81 1.61 1.79 0 .98-.71 1.79-1.61 1.79zm7.04 0c-.88 0-1.61-.81-1.61-1.79s.71-1.79 1.61-1.79c.9 0 1.62.81 1.61 1.79 0 .98-.71 1.79-1.61 1.79z"/>
