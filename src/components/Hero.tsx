@@ -117,7 +117,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
-          <a href="mailto:hello@abhijnyan.dev" className="hero-email">E hello@abhijnyan.dev</a>
+          <a href="mailto:abhijnyansaikia@zohomail.in" className="hero-email">E abhijnyansaikia@zohomail.in</a>
           <span className="hero-location">L NIT Silchar, India</span>
           <span className="hero-copyright">© {new Date().getFullYear()}</span>
         </motion.div>
