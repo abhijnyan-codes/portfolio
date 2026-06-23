@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useTypewriter } from "@/hooks/useTypewriter";
+import { Mail, MapPin } from "lucide-react";
 import "@/styles/hero.css";
 
 export default function Hero() {
@@ -111,15 +112,23 @@ export default function Hero() {
       {/* LAYER 4: EDITORIAL UI */}
       <div className="hero-ui-bottom-layer">
 
-        <motion.div
-          className="hero-contact-info"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-        >
-          <a href="mailto:abhijnyansaikia@zohomail.in" className="hero-email">E abhijnyansaikia@zohomail.in</a>
-          <span className="hero-location">L NIT Silchar, India</span>
-          <span className="hero-copyright">© {new Date().getFullYear()}</span>
+        <motion.div className="flex flex-col gap-4">
+          <a 
+            href="mailto:abhijnyansaikia@zohomail.in" 
+            className="hero-email flex items-center gap-2 hover:text-[#06b6d4] transition-colors"
+          >
+            <Mail size={16} />
+            abhijnyansaikia@zohomail.in
+          </a>
+          
+          <span className="hero-location flex items-center gap-2">
+            <MapPin size={16} />
+            NIT Silchar, India
+          </span>
+          
+          <span className="hero-copyright">
+            © {new Date().getFullYear()}
+          </span>
         </motion.div>
 
         <motion.div
