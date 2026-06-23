@@ -45,7 +45,6 @@ export default function About() {
   const [projectCount, setProjectCount] = useState(0); 
   const [dbStats, setDbStats] = useState({ leetcode: 0, cgpa: 0.0 });
 
-  // 🚀 ULTIMATE DEBUG FETCH LOGIC
   useEffect(() => {
     // 1. Fetch Redis Stats with Cache Buster
     const timestamp = new Date().getTime();
@@ -178,6 +177,11 @@ export default function About() {
               <Link href="https://www.linkedin.com/in/abhijnyan-saikia-458400298/" target="_blank" rel="noopener noreferrer" className="group relative h-14 px-7 rounded-full bg-white/[0.03] border border-white/10 text-white flex items-center justify-center gap-3 transition-all duration-300 hover:bg-white/10 hover:border-[#06b6d4]/40 hover:-translate-y-1">
                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" className="opacity-90 group-hover:text-[#06b6d4] transition-colors"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                 <span className="font-semibold tracking-wide text-sm opacity-90 group-hover:opacity-100 transition-opacity">LinkedIn</span>
+              </Link>
+
+              <Link href="https://leetcode.com/u/abhijnyan-s9/" target="_blank" rel="noopener noreferrer" className="group relative h-14 px-7 rounded-full bg-white/[0.03] border border-white/10 text-white flex items-center justify-center gap-3 transition-all duration-300 hover:bg-white/10 hover:border-[#06b6d4]/40 hover:-translate-y-1">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" className="opacity-90 group-hover:text-[#06b6d4] transition-colors"><path d="M16.102 17.93l-2.697 2.607c-.466.467-1.111.662-1.823.662s-1.357-.195-1.824-.662l-4.332-4.363c-.467-.467-.702-1.15-.702-1.863s.235-1.357.702-1.824l4.319-4.38c.467-.467 1.125-.645 1.837-.645s1.357.195 1.823.662l2.697 2.606c.514.515 1.365.497 1.9-.038.535-.536.553-1.387.039-1.901l-2.609-2.636a5.055 5.055 0 0 0-2.445-1.337l2.467-2.503c.516-.514.498-1.366-.037-1.901-.535-.535-1.387-.552-1.902-.038l-10.1 10.101c-.981.982-1.494 2.337-1.494 3.835s.513 2.853 1.494 3.835l4.332 4.363c.981.981 2.338 1.493 3.835 1.493s2.854-.512 3.835-1.493l2.609-2.636c.514-.515.498-1.366-.037-1.901-.536-.535-1.387-.552-1.902-.038zM20.811 13.01H10.666c-.702 0-1.27.604-1.27 1.346s.568 1.346 1.27 1.346h10.145c.701 0 1.27-.604 1.27-1.346s-.569-1.346-1.27-1.346z"/></svg>
+                <span className="font-semibold tracking-wide text-sm opacity-90 group-hover:opacity-100 transition-opacity">LeetCode</span>
               </Link>
             </motion.div>
           </div>
