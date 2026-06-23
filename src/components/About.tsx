@@ -45,18 +45,27 @@ export default function About() {
   const [projectCount, setProjectCount] = useState(4); 
   const [dbStats, setDbStats] = useState({ leetcode: 0, cgpa: 0.0 });
 
-  // Fetch Live Data
+  // 🚀 ULTIMATE DEBUG FETCH LOGIC
   useEffect(() => {
-    // 1. Fetch Redis Stats (LeetCode & CGPA)
+    console.log("🚀 About component mounted, starting fetch...");
+
+    // 1. Fetch Redis Stats (LeetCode & CGPA) with Cache Buster
     const timestamp = new Date().getTime();
     fetch(`/api/stats?t=${timestamp}`, { cache: 'no-store' })
-      .then((res) => res.json())
+      .then((res) => {
+        console.log("📡 1. API Response Status:", res.status);
+        return res.json();
+      })
       .then((data) => {
+        console.log("📦 2. API Data Received:", data);
         if (data && typeof data.leetcode === 'number') {
           setDbStats({ leetcode: data.leetcode, cgpa: data.cgpa || 0.0 });
+          console.log("✅ 3. React State successfully updated to:", data.leetcode);
+        } else {
+          console.warn("⚠️ 4. Data format is wrong, state NOT updated.");
         }
       })
-      .catch((error) => console.error('Error fetching Redis stats:', error));
+      .catch((error) => console.error('❌ 5. Fetch Failed completely:', error));
 
     // 2. Fetch Merged PRs
     fetch('/api/github/prs')
@@ -84,7 +93,6 @@ export default function About() {
   });
   const parallaxY = useTransform(scrollYProgress, [0, 1], [100, -100]);
 
-  // FIXED: Now pointing to dbStats.leetcode and dbStats.cgpa
   const stats = [
     { value: prCount, suffix: "", label: "Merged PRs", pad: true, float: false },
     { value: dbStats.leetcode, suffix: "", label: "DSA Solved", pad: false, float: false },
@@ -118,7 +126,6 @@ export default function About() {
             </div>
             
             {stats.map((stat, i) => (
-              // KEY FIX: Using the stat label + value as key forces refresh on data update
               <motion.div 
                 key={`${stat.label}-${stat.value}`}
                 initial={{ opacity: 0, x: -20 }}

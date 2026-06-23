@@ -36,7 +36,7 @@ export default function Hero() {
   const navLinks = [
     { label: "/ GitHub",   href: "https://github.com/abhijnyan-codes" },
     { label: "/ LinkedIn", href: "https://www.linkedin.com/in/abhijnyan-saikia-458400298/" },
-    { label: "/ Resume",   href: "/resume.pdf" },
+    { label: "/ Resume",   href: "https://drive.google.com/file/d/1DHtRzABsRuKLuf1BadBsJEWDEnd7H0HN/view?usp=sharing" },
   ];
 
   return (
