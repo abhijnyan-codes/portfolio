@@ -127,7 +127,7 @@ export default function About() {
             
             {stats.map((stat, i) => (
               <motion.div 
-                key={`${stat.label}-${stat.value}`}
+                key={stat.label}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
