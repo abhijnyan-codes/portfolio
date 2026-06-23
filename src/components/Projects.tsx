@@ -97,7 +97,7 @@ export default function Projects() {
 
   // Fetch repos
   useEffect(() => {
-    fetch("https://api.github.com/users/abhijnyan-codes/repos?sort=updated&per_page=100")
+    fetch("/api/github/repos")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -106,7 +106,7 @@ export default function Projects() {
 
           // Fetch languages for each repo in parallel
           completed.forEach((repo: Project) => {
-            fetch(`https://api.github.com/repos/abhijnyan-codes/${repo.name}/languages`)
+            fetch(`/api/github/langs/${repo.name}`)
               .then((r) => r.json())
               .then((langs: Record<string, number>) => {
                 const sorted = Object.entries(langs)
