@@ -12,35 +12,68 @@
 }
 
 /* ════════════════════════════
-   LAYER 0: ATMOSPHERE
+   LAYER 0: FLUID AURORA ATMOSPHERE
 ════════════════════════════ */
-.hero-glow-ambient {
+.hero-aurora-container {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 120vw;
-  height: 120vh;
-  /* Removed the heavy blue wash, replaced with a near-invisible neutral base */
-  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.01) 0%, transparent 65%);
+  inset: 0;
+  overflow: hidden;
   z-index: 1;
   pointer-events: none;
+  /* Fades the aurora out at the edges so it blends perfectly into the dark mode */
+  mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
 }
 
-.hero-glow-core {
+.aurora-blob-1 {
   position: absolute;
-  /* Anchored to the bottom, directly behind the portrait */
-  top: auto;
-  bottom: -10%;
+  top: 10%;
+  left: 15%;
+  width: 55vw;
+  height: 55vw;
+  background: rgba(6, 182, 212, 0.12); /* Signature Cyan */
+  filter: blur(120px);
+  border-radius: 50%;
+  animation: orbit1 25s ease-in-out infinite alternate;
+}
+
+.aurora-blob-2 {
+  position: absolute;
+  bottom: 10%;
+  right: 15%;
+  width: 60vw;
+  height: 45vw;
+  background: rgba(2, 132, 199, 0.08); /* Deep Blue for contrast */
+  filter: blur(140px);
+  border-radius: 50%;
+  animation: orbit2 30s ease-in-out infinite alternate-reverse;
+}
+
+.aurora-blob-3 {
+  position: absolute;
+  top: 40%;
   left: 50%;
-  transform: translateX(-50%);
-  width: 70vw;
-  height: 70vh;
-  /* Concentrated Cyan glow just for the subject spotlight */
-  background: radial-gradient(circle, rgba(6,182,212,0.25) 0%, rgba(6,182,212,0.05) 40%, transparent 70%);
-  filter: blur(60px);
-  z-index: 2;
-  pointer-events: none;
+  width: 40vw;
+  height: 40vw;
+  background: rgba(255, 255, 255, 0.02); /* Soft white highlight */
+  filter: blur(100px);
+  border-radius: 50%;
+  animation: orbit3 20s ease-in-out infinite alternate;
+}
+
+@keyframes orbit1 {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  100% { transform: translate(15vw, 15vh) scale(1.1) rotate(45deg); }
+}
+
+@keyframes orbit2 {
+  0% { transform: translate(0, 0) scale(1.1) rotate(0deg); }
+  100% { transform: translate(-20vw, -10vh) scale(0.9) rotate(-30deg); }
+}
+
+@keyframes orbit3 {
+  0% { transform: translate(-50%, -50%) scale(0.9); }
+  100% { transform: translate(-30%, -70%) scale(1.2); }
 }
 
 .hero-vignette {
@@ -59,7 +92,7 @@
   top: 18%;
   left: 0;
   width: 100%;
-  z-index: 45; /* Remains above everything */
+  z-index: 45;
   pointer-events: none;
   user-select: none;
 }
@@ -72,7 +105,6 @@
   top: 22%;
   left: 0;
   width: 100%;
-  /* CHANGED: Lowered to 20 so the portrait (25) sits on top */
   z-index: 20; 
   pointer-events: none;
   user-select: none;
@@ -126,8 +158,6 @@
   margin: 0;
   text-align: left;
   white-space: nowrap;
-
-  /* CHANGED: Cyan to Frosty White gradient (No Pink) */
   background: linear-gradient(135deg, #06b6d4 0%, #e0f2fe 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -143,15 +173,15 @@
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  /* INCREASED: Bumped to 85vh so it pushes higher into the text area */
   height: 85vh; 
   max-width: 900px;
-  /* CHANGED: Raised to 25 so it physically covers the text */
   z-index: 25; 
   display: flex;
   justify-content: center;
   align-items: flex-end;
   pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 95%);
+  mask-image: linear-gradient(to bottom, black 70%, transparent 95%);
 }
 
 .hero-portrait {
@@ -159,7 +189,7 @@
   width: auto;
   object-fit: contain;
   object-position: bottom center;
-  filter: drop-shadow(0 -10px 40px rgba(9,9,9,0.5)) contrast(1.15) brightness(0.95);
+  filter: drop-shadow(0 -10px 40px rgba(9,9,9,0.5)) brightness(0.75) contrast(1.2) saturate(0.85);
 }
 
 /* ════════════════════════════
@@ -172,7 +202,7 @@
   width: 100%;
   height: 35vh;
   background: linear-gradient(to bottom, transparent 0%, rgba(9,9,9,0.85) 60%, #090909 100%);
-  z-index: 28; /* Adjusted to sit over the portrait's bottom edge */
+  z-index: 28;
   pointer-events: none;
 }
 

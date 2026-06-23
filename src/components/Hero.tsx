@@ -29,7 +29,6 @@ export default function Hero() {
   }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    // Only subtle horizontal parallax — no vertical so portrait stays grounded
     const x = (e.clientX / window.innerWidth - 0.5) * 20;
     setMouseX(x);
   };
@@ -43,9 +42,12 @@ export default function Hero() {
   return (
     <section className="hero-section" onMouseMove={handleMouseMove}>
 
-      {/* LAYER 0: ATMOSPHERE */}
-      <div className="hero-glow-ambient" />
-      <div className="hero-glow-core" />
+      {/* LAYER 0: FLUID AURORA ATMOSPHERE */}
+      <div className="hero-aurora-container">
+        <div className="aurora-blob-1" />
+        <div className="aurora-blob-2" />
+        <div className="aurora-blob-3" />
+      </div>
       <div className="hero-vignette" />
 
       {/* LAYER 1: GREETING — always above portrait */}
@@ -68,7 +70,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* LAYER 2: NAME BEHIND portrait (z-index 15, portrait is 20) */}
+      {/* LAYER 2: NAME BEHIND portrait */}
       <div className="hero-name-layer">
         <div className="hero-typography-container">
           <motion.h1
@@ -82,7 +84,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* LAYER 3: PORTRAIT — fixed to bottom, subtle x parallax only */}
+      {/* LAYER 3: PORTRAIT */}
       <div className="hero-portrait-layer">
         {mounted && (
           <motion.img
