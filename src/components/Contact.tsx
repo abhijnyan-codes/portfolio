@@ -103,7 +103,7 @@ export default function Contact() {
           >
             <Link 
               href="mailto:abhijnyansaikia02@gmail.com"
-              className="group flex flex-col items-center text-center p-10 rounded-3xl bg-white/[0.015] border border-white/[0.05] hover:bg-white/[0.03] hover:border-[#06b6d4]/40 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(236,72,153,0.1)] h-full relative overflow-hidden"
+              className="group flex flex-col items-center text-center p-10 rounded-3xl bg-white/[0.015] border border-white/[0.05] hover:bg-white/[0.03] hover:border-[#06b6d4]/40 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(6,182,212,0.1)] h-full relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-b from-[#06b6d4]/0 to-[#06b6d4]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
@@ -130,7 +130,7 @@ export default function Contact() {
           >
             <Link 
               href="mailto:abhijnyansaikia@zohomail.in"
-              className="group flex flex-col items-center text-center p-10 rounded-3xl bg-white/[0.015] border border-white/[0.05] hover:bg-white/[0.03] hover:border-[#06b6d4]/40 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(236,72,153,0.1)] h-full relative overflow-hidden"
+              className="group flex flex-col items-center text-center p-10 rounded-3xl bg-white/[0.015] border border-white/[0.05] hover:bg-white/[0.03] hover:border-[#06b6d4]/40 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(6,182,212,0.1)] h-full relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-b from-[#06b6d4]/0 to-[#06b6d4]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
@@ -168,7 +168,7 @@ export default function Contact() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={social.name}
-              className="w-14 h-14 rounded-2xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-center text-[#a1a1aa] hover:bg-[#06b6d4] hover:text-white hover:border-[#06b6d4] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_20px_-10px_rgba(236,72,153,0.5)] group"
+              className="w-14 h-14 rounded-2xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-center text-[#a1a1aa] hover:bg-[#06b6d4] hover:text-white hover:border-[#06b6d4] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_20px_-10px_rgba(6,182,212,0.5)] group"
             >
               <div className="group-hover:scale-110 transition-transform duration-300">
                 {social.icon}

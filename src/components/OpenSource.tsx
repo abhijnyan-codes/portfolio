@@ -104,7 +104,6 @@ export default function OpenSource() {
         </svg>
       </div>
 
-      {/* CHANGED: Max-width reduced from 1000px to 850px to proportionally shrink all cards */}
       <div className="relative z-10 max-w-[850px] mx-auto px-6 md:px-12">
         
         {/* Integrated Header Section */}
@@ -159,7 +158,7 @@ export default function OpenSource() {
                     className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group"
                   >
                     {/* Glowing Timeline Dot */}
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full border-4 border-[#090909] bg-[#06b6d4] shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 shadow-[0_0_15px_rgba(236,72,153,0.4)]">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full border-4 border-[#090909] bg-[#06b6d4] shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 shadow-[0_0_15px_rgba(6,182,212,0.4)]">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#090909" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12"></polyline>
                       </svg>

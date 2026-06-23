@@ -43,7 +43,7 @@ export async function POST(request: Request) {
     const { password, updates } = body;
 
     // SECURE YOUR ROUTE
-    if (password !== "hunter2") {
+    if (password !== process.env.ADMIN_PASSWORD) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

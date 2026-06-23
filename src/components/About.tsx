@@ -169,7 +169,7 @@ export default function About() {
               transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="flex flex-wrap gap-4"
             >
-              <Link href="https://drive.google.com/file/d/1DHtRzABsRuKLuf1BadBsJEWDEnd7H0HN/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="group relative h-14 px-8 rounded-full bg-[#06b6d4] text-white flex items-center justify-center gap-2.5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_20px_-6px_rgba(236,72,153,0.6)]">
+              <Link href="https://drive.google.com/file/d/1DHtRzABsRuKLuf1BadBsJEWDEnd7H0HN/view?usp=drive_link" target="_blank" rel="noopener noreferrer" className="group relative h-14 px-8 rounded-full bg-[#06b6d4] text-white flex items-center justify-center gap-2.5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_20px_-6px_rgba(6,182,212,0.6)]">
                 <span className="font-semibold tracking-wide text-sm">Resume</span>
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </Link>
