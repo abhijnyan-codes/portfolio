@@ -48,7 +48,8 @@ export default function About() {
   // Fetch Live Data
   useEffect(() => {
     // 1. Fetch Redis Stats (LeetCode & CGPA)
-    fetch('/api/stats', { cache: 'no-store' })
+    const timestamp = new Date().getTime();
+    fetch(`/api/stats?t=${timestamp}`, { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
         if (data && typeof data.leetcode === 'number') {
