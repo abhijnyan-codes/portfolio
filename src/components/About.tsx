@@ -46,13 +46,17 @@ export default function About() {
   const [dbStats, setDbStats] = useState({ leetcode: 0, cgpa: 0.0 });
 
   useEffect(() => {
-    // 1. Fetch Redis Stats with Cache Buster
+    // 1. Fetch Redis Stats with Cache Buster and Explicit Type Casting
     const timestamp = new Date().getTime();
     fetch(`/api/stats?t=${timestamp}`, { cache: 'no-store' })
       .then((res) => res.json())
       .then((data) => {
-        if (data && typeof data.leetcode === 'number') {
-          setDbStats({ leetcode: data.leetcode, cgpa: data.cgpa || 0.0 });
+        // Safe check: Parse data strings into valid JS Numbers
+        if (data && !data.error) {
+          setDbStats({ 
+            leetcode: data.leetcode ? Number(data.leetcode) : 0, 
+            cgpa: data.cgpa ? Number(data.cgpa) : 0.0 
+          });
         }
       })
       .catch((error) => console.error('Fetch Stats Failed:', error));
@@ -156,7 +160,7 @@ export default function About() {
               <p>Now focused on building full-stack applications, contributing to open source, and creating AI-powered products that solve real-world problems.</p>
             </motion.div>
 
-            {/* PREMIUM BUTTON ROW */}
+            {/* BUTTON ROW - With properly matched motion tags! */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -184,6 +188,7 @@ export default function About() {
                 <span className="font-semibold tracking-wide text-sm opacity-90 group-hover:opacity-100 transition-opacity">LeetCode</span>
               </Link>
             </motion.div>
+
           </div>
         </div>
       </div>
