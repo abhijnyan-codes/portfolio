@@ -1,17 +1,49 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-// Simple Icons via CDN — swaps gray/cyan on hover
+// --- ICON HELPER SYSTEM ---
+// Maps the string from your Redis DB to the exact official Simple Icons slug
+const getIconSlug = (name: string) => {
+  const map: Record<string, string> = {
+    "react": "react",
+    "next.js": "nextdotjs",
+    "typescript": "typescript",
+    "tailwind": "tailwindcss",    // Fixes Tailwind logo!
+    "html5": "html5",
+    "css3": "css",                // Fixes CSS3 logo!
+    "node.js": "nodedotjs",
+    "express": "express",
+    "rest apis": "fastapi",       // Custom map to FastApi icon
+    "websocket": "socketdotio",   // Custom map to Socket.io icon
+    "mongodb": "mongodb",
+    "sqlite": "sqlite",
+    "c++": "cplusplus",
+    "c": "c",
+    "python": "python",
+    "javascript": "javascript",
+    "sql": "mysql",               // Custom map to MySQL icon
+    "git": "git",
+    "github": "github",
+    "figma": "figma",
+    "docker": "docker",
+    "netlify": "netlify",
+    "render": "render",
+    "vs code": "vscode",          // Catches it for custom vector check below
+  };
+  return map[name.toLowerCase().trim()] || name.toLowerCase().replace(/[^a-z0-9]/g, "");
+};
+
+// Simple Icons Image Loader Engine
 const SI = ({ slug, className = "w-5 h-5" }: { slug: string; className?: string }) => (
   <>
-    <img src={`https://cdn.simpleicons.org/${slug}/a1a1aa`} alt={slug} className={`${className} group-hover:hidden`} />
-    <img src={`https://cdn.simpleicons.org/${slug}/06b6d4`} alt={slug} className={`${className} hidden group-hover:block`} />
+    <img src={`https://cdn.simpleicons.org/${slug}/a1a1aa`} alt={slug} className={`${className} group-hover:hidden`} loading="lazy" />
+    <img src={`https://cdn.simpleicons.org/${slug}/06b6d4`} alt={slug} className={`${className} hidden group-hover:block`} loading="lazy" />
   </>
 );
 
-// Inline SVG fallback for icons not in Simple Icons (VS Code, GSSoC)
+// Vector fallbacks for hardcoded assets outside of SimpleIcons
 const VSCodeIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M16.5 3.5l-9 9 9 9" />
@@ -20,17 +52,9 @@ const VSCodeIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   </svg>
 );
 
-const GSSoCIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10" />
-    <path d="M12 8v4l3 3" />
-    <path d="M8 12h4" />
-  </svg>
-);
-
-type Skill = {
-  name: string;
-  icon: string | "vscode" | "gssoc";
+const SkillIcon = ({ icon, className = "w-5 h-5" }: { icon: string; className?: string }) => {
+  if (icon === "vscode") return <VSCodeIcon className={className} />;
+  return <SI slug={icon} className={className} />;
 };
 
 const skillCategories = [
@@ -42,15 +66,7 @@ const skillCategories = [
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" />
       </svg>
-    ),
-    skills: [
-      { name: "React",      icon: "react" },
-      { name: "Next.js",    icon: "nextdotjs" },
-      { name: "TypeScript", icon: "typescript" },
-      { name: "Tailwind",   icon: "tailwindcss" },
-      { name: "HTML5",      icon: "html5" },
-      { name: "CSS3",       icon: "css" },
-    ] as Skill[]
+    )
   },
   {
     id: "backend",
@@ -60,15 +76,7 @@ const skillCategories = [
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="2" width="20" height="8" rx="2" ry="2" /><rect x="2" y="14" width="20" height="8" rx="2" ry="2" /><line x1="6" y1="6" x2="6.01" y2="6" /><line x1="6" y1="18" x2="6.01" y2="18" />
       </svg>
-    ),
-    skills: [
-      { name: "Node.js",   icon: "nodedotjs" },
-      { name: "Express",   icon: "express" },
-      { name: "REST APIs", icon: "fastapi" },
-      { name: "WebSocket", icon: "socketdotio" },
-      { name: "MongoDB",   icon: "mongodb" },
-      { name: "SQLite",    icon: "sqlite" },
-    ] as Skill[]
+    )
   },
   {
     id: "languages",
@@ -78,14 +86,7 @@ const skillCategories = [
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" />
       </svg>
-    ),
-    skills: [
-      { name: "C++",        icon: "cplusplus" },
-      { name: "C",          icon: "c" },
-      { name: "Python",     icon: "python" },
-      { name: "JavaScript", icon: "javascript" },
-      { name: "SQL",        icon: "mysql" },
-    ] as Skill[]
+    )
   },
   {
     id: "tools",
@@ -95,27 +96,35 @@ const skillCategories = [
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
       </svg>
-    ),
-    skills: [
-      { name: "Git",     icon: "git" },
-      { name: "GitHub",  icon: "github" },
-      { name: "Figma",   icon: "figma" },
-      { name: "VS Code", icon: "vscode" },
-      { name: "Docker",  icon: "docker" },
-      { name: "Netlify", icon: "netlify" },
-      { name: "Render",  icon: "render" },
-    ] as Skill[]
+    )
   }
 ];
 
-const SkillIcon = ({ icon, className = "w-5 h-5" }: { icon: string; className?: string }) => {
-  if (icon === "vscode") return <VSCodeIcon className={className} />;
-  if (icon === "gssoc")  return <GSSoCIcon className={className} />;
-  return <SI slug={icon} className={className} />;
-};
-
 export default function Skills() {
   const [activeTab, setActiveTab] = useState(0);
+  const [dbSkills, setDbSkills] = useState<Record<string, string[]>>({
+    frontend: [], backend: [], languages: [], tools: []
+  });
+
+  // Pull array metrics synchronously from Redis
+  useEffect(() => {
+    fetch("/api/skills")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && !data.error) {
+          setDbSkills({
+            frontend: data.frontend || [],
+            backend: data.backend || [],
+            languages: data.languages || [],
+            tools: data.tools || []
+          });
+        }
+      })
+      .catch((err) => console.error("Failed to sync edge system skills architecture", err));
+  }, []);
+
+  const currentCategoryKey = skillCategories[activeTab].id;
+  const currentSkills = dbSkills[currentCategoryKey] || [];
 
   return (
     <section id="skills" className="relative w-full py-24 md:py-32 bg-[#090909] font-sans border-t border-white/[0.02] overflow-hidden">
@@ -127,12 +136,12 @@ export default function Skills() {
         </h2>
       </div>
 
-      {/* Subtle glow */}
+      {/* Subtle glow grid layer */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#06b6d4]/5 blur-[120px] pointer-events-none rounded-full z-0" />
 
       <div className="relative z-20 max-w-[1100px] mx-auto px-6 md:px-12">
         
-        {/* Header */}
+        {/* Header Content */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -150,7 +159,7 @@ export default function Skills() {
 
         <div className="flex flex-col md:flex-row gap-8 md:gap-12 lg:gap-16">
           
-          {/* Tab nav */}
+          {/* Sidebar Tab Triggers */}
           <div className="w-full md:w-5/12 lg:w-1/3 flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-4 md:pb-0 hide-scrollbar border-b md:border-b-0 md:border-l border-white/10 md:pl-0">
             {skillCategories.map((category, index) => {
               const isActive = activeTab === index;
@@ -185,7 +194,7 @@ export default function Skills() {
             })}
           </div>
 
-          {/* Skill cards */}
+          {/* Dynamic Grid Layout View */}
           <div className="w-full md:w-7/12 lg:w-2/3 min-h-[250px] flex items-start pt-2 md:pt-4">
             <AnimatePresence mode="wait">
               <motion.div
@@ -196,22 +205,26 @@ export default function Skills() {
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4"
               >
-                {skillCategories[activeTab].skills.map((skill, i) => (
-                  <motion.div
-                    key={skill.name}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, delay: i * 0.04 }}
-                    className="group flex items-center gap-4 px-5 py-4 md:px-6 md:py-5 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] hover:border-[#06b6d4]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_20px_-8px_rgba(6,182,212,0.2)] cursor-default w-full"
-                  >
-                    <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/[0.04] group-hover:bg-[#06b6d4]/10 transition-colors shrink-0 border border-white/[0.05] group-hover:border-[#06b6d4]/20 shadow-inner text-[#a1a1aa] group-hover:text-[#06b6d4]">
-                      <SkillIcon icon={skill.icon} />
-                    </div>
-                    <span className="text-sm md:text-base font-bold text-[#a1a1aa] group-hover:text-white transition-colors tracking-wide">
-                      {skill.name}
-                    </span>
-                  </motion.div>
-                ))}
+                {currentSkills.length > 0 ? (
+                  currentSkills.map((skillName, i) => (
+                    <motion.div
+                      key={skillName}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3, delay: i * 0.04 }}
+                      className="group flex items-center gap-4 px-5 py-4 md:px-6 md:py-5 rounded-2xl bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.04] hover:border-[#06b6d4]/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_20px_-8px_rgba(6,182,212,0.2)] cursor-default w-full"
+                    >
+                      <div className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/[0.04] group-hover:bg-[#06b6d4]/10 transition-colors shrink-0 border border-white/[0.05] group-hover:border-[#06b6d4]/20 shadow-inner text-[#a1a1aa] group-hover:text-[#06b6d4]">
+                        <SkillIcon icon={getIconSlug(skillName)} />
+                      </div>
+                      <span className="text-sm md:text-base font-bold text-[#a1a1aa] group-hover:text-white transition-colors tracking-wide">
+                        {skillName}
+                      </span>
+                    </motion.div>
+                  ))
+                ) : (
+                  <p className="text-[#a1a1aa]/50 text-sm italic col-span-full">No skills deployed in this category yet.</p>
+                )}
               </motion.div>
             </AnimatePresence>
           </div>

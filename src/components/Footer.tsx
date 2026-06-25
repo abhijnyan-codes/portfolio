@@ -1,12 +1,21 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+
 export default function Footer() {
+  const pathname = usePathname();
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   };
+
+  // 🚀 Hides the footer on the Command Center page
+  if (pathname === "/admin") {
+    return null;
+  }
 
   return (
     <footer className="w-full border-t border-white/[0.05] bg-[#090909] py-8 md:py-12 relative z-20">

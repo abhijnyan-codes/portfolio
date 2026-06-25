@@ -3,123 +3,64 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import ReactMarkdown from "react-markdown";
 
-type Project = {
-  name: string;
+// 1. Updated Type to match your Admin Panel Database Structure
+type ProjectData = {
+  id: string; // The GitHub repo name
+  title: string;
   description: string;
-  html_url: string;
-  homepage: string;
-  topics: string[];
-  language: string | null;
+  timeline: string;
+  team: string;
+  tech: string[];
+  githubUrl: string;
+  demoUrl?: string;
+  overview: string;
+  role: string[];
+  features: string[];
+  customSectionTitle: string;
+  customSectionContent: string[];
 };
 
 // Language → color map
 const LANG_COLORS: Record<string, string> = {
-  TypeScript: "#3178c6",
-  JavaScript: "#f1e05a",
-  Python: "#3572A5",
-  Rust: "#dea584",
-  Go: "#00ADD8",
-  CSS: "#563d7c",
-  HTML: "#e34c26",
-  Vue: "#41b883",
-  Svelte: "#ff3e00",
-  "C++": "#f34b7d",
-  C: "#555555",
-  Java: "#b07219",
-  Ruby: "#701516",
-  Swift: "#F05138",
-  Kotlin: "#A97BFF",
-  Shell: "#89e051",
-  Dockerfile: "#384d54",
-};
-
-// ==========================================
-// 🚀 YOUR CUSTOM CASE STUDY DATABASE
-// Edit this to add specific details to each project!
-// ==========================================
-const getProjectDetails = (projectName: string, description: string) => {
-  const details: Record<string, any> = {
-    "Web-Browser-Simulation-": {
-      timeline: "3 Weeks",
-      team: "Solo",
-      overview: "A full-stack browser simulation built to deeply understand the underlying mechanics of modern web browsers. It replicates core functionalities like tab lifecycle management, history state routing, and basic rendering logic.",
-      role: [
-        "Full-stack C++ Development",
-        "Engine Architecture Design",
-        "Memory Management & Optimization",
-        "Custom UI Implementation"
-      ],
-      features: [
-        "Custom Doubly Linked List for O(1) history traversal",
-        "Memory-safe tab creation and destruction",
-        "Interactive browser-inspired UI layout"
-      ],
-      improvements: [
-        "Implement multi-threading for isolated tab processes",
-        "Add a basic CSS/HTML parsing engine"
-      ]
-    },
-    // Add more projects here like: "CampusKart": { ... }
-  };
-
-  // The Default Fallback Template
-  return details[projectName] || {
-    timeline: "2 Weeks",
-    team: "Solo",
-    overview: description || "A fully responsive, performance-optimized application built from scratch. Designed with scalability and aesthetics in mind, the goal was to deliver a bold online presence that captures attention while remaining user-friendly.",
-    role: [
-      "Full-stack Development",
-      "UI/UX Implementation",
-      "Component-based architecture",
-      "Deployment & optimization"
-    ],
-    features: [
-      "Responsive layout with smooth interactions",
-      "Modular components for easy reuse",
-      "Performance-optimized structure",
-      "Clean, maintainable codebase"
-    ],
-    improvements: [
-      "Implement advanced caching strategies",
-      "Add comprehensive end-to-end testing"
-    ]
-  };
+  TypeScript: "#3178c6", JavaScript: "#f1e05a", Python: "#3572A5",
+  Rust: "#dea584", Go: "#00ADD8", CSS: "#563d7c", HTML: "#e34c26",
+  Vue: "#41b883", Svelte: "#ff3e00", "C++": "#f34b7d", C: "#555555",
+  Java: "#b07219", Ruby: "#701516", Swift: "#F05138", Kotlin: "#A97BFF",
+  Shell: "#89e051", Dockerfile: "#384d54",
 };
 
 export default function Projects() {
-  const [allProjects, setAllProjects] = useState<Project[]>([]);
+  const [allProjects, setAllProjects] = useState<ProjectData[]>([]);
   const [showAll, setShowAll] = useState(false);
   const [projectLangs, setProjectLangs] = useState<Record<string, string[]>>({});
 
-  const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [activeProject, setActiveProject] = useState<ProjectData | null>(null);
 
-  // Fetch repos
+  // 2. Fetch Live Projects from your new API route
   useEffect(() => {
-    fetch("/api/github/repos")
+    fetch("/api/projects")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
-          const completed = data.filter((r) => r.topics?.includes("completed"));
-          setAllProjects(completed);
+          setAllProjects(data);
 
-          // Fetch languages for each repo in parallel
-          completed.forEach((repo: Project) => {
-            fetch(`/api/github/langs/${repo.name}`)
+          // Fetch languages for each repo in parallel using the project ID (repo name)
+          data.forEach((repo: ProjectData) => {
+            fetch(`/api/github/langs/${repo.id}`)
               .then((r) => r.json())
               .then((langs: Record<string, number>) => {
                 const sorted = Object.entries(langs)
                   .sort((a, b) => b[1] - a[1])
                   .slice(0, 3)
                   .map(([lang]) => lang);
-                setProjectLangs((prev) => ({ ...prev, [repo.name]: sorted }));
+                setProjectLangs((prev) => ({ ...prev, [repo.id]: sorted }));
               })
               .catch(() => {});
           });
         }
       })
-      .catch((err) => console.error("Failed to fetch GitHub projects", err));
+      .catch((err) => console.error("Failed to fetch live projects", err));
   }, []);
 
   useEffect(() => {
@@ -173,15 +114,14 @@ export default function Projects() {
         <AnimatePresence>
           {displayedProjects.map((project, i) => {
             const isLeft = i % 2 === 0;
+            const apiLangs = projectLangs[project.id] || [];
             
-            const apiLangs = projectLangs[project.name] || [];
-            const repoTopics = project.topics?.filter(t => t !== "completed") || [];
-            const primaryLang = project.language ? [project.language] : [];
-            const combinedSkills = Array.from(new Set([...apiLangs, ...repoTopics, ...primaryLang])).slice(0, 4);
+            // Combine Database tech array with GitHub API languages
+            const combinedSkills = Array.from(new Set([...apiLangs, ...(project.tech || [])])).slice(0, 5);
 
             return (
               <motion.div
-                key={project.name}
+                key={project.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -224,8 +164,8 @@ export default function Projects() {
                     <div className="relative aspect-[16/9] overflow-hidden bg-[#111] border-b border-white/[0.03]">
                       <div className="absolute inset-0 bg-gradient-to-br from-[#06b6d4]/10 to-transparent z-0 group-hover:opacity-60 transition-opacity" />
                       <img
-                        src={`https://raw.githubusercontent.com/abhijnyan-codes/${project.name}/main/preview.png`}
-                        alt={project.name}
+                        src={`https://raw.githubusercontent.com/abhijnyan-codes/${project.id}/main/preview.png`}
+                        alt={project.title}
                         className="absolute inset-0 w-full h-full object-cover z-10 transition-transform duration-500 group-hover:scale-[1.02]"
                         onError={(e) => (e.currentTarget.style.display = "none")}
                       />
@@ -237,12 +177,12 @@ export default function Projects() {
                       {/* Title & GitHub Icon Container */}
                       <div className="flex justify-between items-start mb-2">
                         <h3 className="text-xs font-bold text-white tracking-tight capitalize group-hover:text-[#06b6d4] transition-colors pr-4">
-                          {project.name.replace(/-/g, " ")}
+                          {project.title}
                         </h3>
                         
-                        {/* Direct GitHub Link (stopPropagation prevents modal from opening) */}
+                        {/* Direct GitHub Link */}
                         <Link
-                          href={project.html_url}
+                          href={project.githubUrl}
                           target="_blank"
                           onClick={(e) => e.stopPropagation()}
                           className="text-[#a1a1aa] hover:text-[#06b6d4] transition-colors z-30 p-1 rounded-md hover:bg-white/5"
@@ -255,7 +195,7 @@ export default function Projects() {
                       </div>
 
                       <p className="text-[#71717a] text-[11px] leading-relaxed line-clamp-2 mb-4">
-                        {project.description || "A high-performance application built to solve real-world problems."}
+                        {project.description}
                       </p>
 
                       {/* Language & Skill chips */}
@@ -299,7 +239,7 @@ export default function Projects() {
       )}
 
       {/* ========================
-          HARDCODED CASE STUDY MODAL
+          LIVE DATABASE CASE STUDY MODAL
       ======================== */}
       <AnimatePresence>
         {activeProject && (
@@ -330,15 +270,15 @@ export default function Projects() {
                   {/* Left Side: Title & Buttons */}
                   <div className="w-full md:w-1/2">
                     <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-4 capitalize">
-                      {activeProject.name.replace(/-/g, " ")}
+                      {activeProject.title}
                     </h1>
                     <p className="text-sm text-[#a1a1aa] leading-relaxed mb-8">
-                      {activeProject.description || "A high-performance application built to solve real-world problems."}
+                      {activeProject.description}
                     </p>
                     
                     <div className="flex flex-wrap gap-3">
                       <Link
-                        href={activeProject.html_url}
+                        href={activeProject.githubUrl}
                         target="_blank"
                         className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-[#06b6d4] text-white font-medium text-[10px] tracking-widest uppercase transition-colors flex items-center gap-2"
                       >
@@ -347,9 +287,9 @@ export default function Projects() {
                         </svg>
                         GitHub
                       </Link>
-                      {activeProject.homepage && (
+                      {activeProject.demoUrl && (
                         <Link
-                          href={activeProject.homepage}
+                          href={activeProject.demoUrl}
                           target="_blank"
                           className="px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-white font-medium text-[10px] tracking-widest uppercase hover:bg-white/10 transition-colors flex items-center gap-2"
                         >
@@ -357,7 +297,7 @@ export default function Projects() {
                             <line x1="7" y1="17" x2="17" y2="7"></line>
                             <polyline points="7 7 17 7 17 17"></polyline>
                           </svg>
-                          {activeProject.homepage.includes("youtube") || activeProject.homepage.includes("loom") ? "Watch Demo" : "Live Demo"}
+                          {activeProject.demoUrl.includes("youtube") || activeProject.demoUrl.includes("loom") ? "Watch Demo" : "Live Demo"}
                         </Link>
                       )}
                     </div>
@@ -367,16 +307,16 @@ export default function Projects() {
                   <div className="w-full md:w-5/12 bg-white/[0.02] border border-white/5 rounded-2xl p-6 grid grid-cols-2 gap-y-6 gap-x-4">
                     <div>
                       <span className="text-[#06b6d4] text-[10px] font-bold uppercase tracking-wider block mb-1">Timeline</span>
-                      <span className="text-sm text-white font-medium">{getProjectDetails(activeProject.name, activeProject.description).timeline}</span>
+                      <span className="text-sm text-white font-medium">{activeProject.timeline}</span>
                     </div>
                     <div>
-                      <span className="text-[#06b6d4] text-[10px] font-bold uppercase tracking-wider block mb-1">Team</span>
-                      <span className="text-sm text-white font-medium">{getProjectDetails(activeProject.name, activeProject.description).team}</span>
+                      <span className="text-[#06b6d4] text-[10px] font-bold uppercase tracking-wider block mb-1">Team Size</span>
+                      <span className="text-sm text-white font-medium">{activeProject.team}</span>
                     </div>
                     <div className="col-span-2">
                       <span className="text-[#06b6d4] text-[10px] font-bold uppercase tracking-wider block mb-2">Technologies</span>
                       <div className="flex flex-wrap gap-2">
-                        {Array.from(new Set([...(projectLangs[activeProject.name] || []), ...(activeProject.topics?.filter(t => t !== "completed") || []), activeProject.language].filter(Boolean))).map((tech, idx) => (
+                        {Array.from(new Set([...(projectLangs[activeProject.id] || []), ...(activeProject.tech || [])])).map((tech, idx) => (
                           <span key={idx} className="text-xs text-white/80 bg-white/5 border border-white/10 px-2 py-1 rounded">
                             {tech}
                           </span>
@@ -389,8 +329,8 @@ export default function Projects() {
                 {/* Hero Showcase Image */}
                 <div className="w-full aspect-video rounded-2xl overflow-hidden bg-[#090909] border border-white/10 mb-16 relative">
                   <img
-                    src={`https://raw.githubusercontent.com/abhijnyan-codes/${activeProject.name}/main/preview.png`}
-                    alt={`${activeProject.name} Interface`}
+                    src={`https://raw.githubusercontent.com/abhijnyan-codes/${activeProject.id}/main/preview.png`}
+                    alt={`${activeProject.title} Interface`}
                     className="w-full h-full object-cover"
                     onError={(e) => (e.currentTarget.style.display = "none")}
                   />
@@ -401,49 +341,55 @@ export default function Projects() {
                   
                   <section>
                     <h2 className="text-xl font-bold text-white mb-4">Project Overview</h2>
-                    <p className="text-sm text-[#a1a1aa] leading-relaxed">
-                      {getProjectDetails(activeProject.name, activeProject.description).overview}
+                    <p className="text-sm text-[#a1a1aa] leading-relaxed whitespace-pre-wrap">
+                      {activeProject.overview}
                     </p>
                   </section>
 
-                  <section>
-                    <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                      Your Role <span className="w-2 h-2 rounded-full bg-[#06b6d4]"></span>
-                    </h2>
-                    <ul className="space-y-3">
-                      {getProjectDetails(activeProject.name, activeProject.description).role.map((item: string, idx: number) => (
-                        <li key={idx} className="flex items-start gap-3 text-sm text-[#a1a1aa]">
-                          <span className="text-[#06b6d4] mt-0.5">•</span> {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
+                  {activeProject.role?.length > 0 && (
+                    <section>
+                      <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
+                        Your Role <span className="w-2 h-2 rounded-full bg-[#06b6d4]"></span>
+                      </h2>
+                      <ul className="space-y-3">
+                        {activeProject.role.map((item: string, idx: number) => (
+                          <li key={idx} className="flex items-start gap-3 text-sm text-[#a1a1aa]">
+                            <span className="text-[#06b6d4] mt-0.5 text-lg leading-none">•</span> {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
 
-                  <section>
-                    <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                      Key Features <span className="w-2 h-2 rounded-full bg-[#06b6d4]"></span>
-                    </h2>
-                    <ul className="space-y-3">
-                      {getProjectDetails(activeProject.name, activeProject.description).features.map((item: string, idx: number) => (
-                        <li key={idx} className="flex items-start gap-3 text-sm text-[#a1a1aa]">
-                          <span className="text-[#06b6d4] mt-0.5">•</span> {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
+                  {activeProject.features?.length > 0 && (
+                    <section>
+                      <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
+                        Key Features <span className="w-2 h-2 rounded-full bg-[#06b6d4]"></span>
+                      </h2>
+                      <ul className="space-y-3">
+                        {activeProject.features.map((item: string, idx: number) => (
+                          <li key={idx} className="flex items-start gap-3 text-sm text-[#a1a1aa]">
+                            <span className="text-[#06b6d4] mt-0.5 text-lg leading-none">•</span> {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
 
-                  <section>
-                    <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                      Future Improvements <span className="w-2 h-2 rounded-full bg-[#06b6d4]"></span>
-                    </h2>
-                    <ul className="space-y-3">
-                      {getProjectDetails(activeProject.name, activeProject.description).improvements.map((item: string, idx: number) => (
-                        <li key={idx} className="flex items-start gap-3 text-sm text-[#a1a1aa]">
-                          <span className="text-[#06b6d4] mt-0.5">•</span> {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
+                  {activeProject.customSectionContent?.length > 0 && (
+                    <section>
+                      <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-3">
+                        {activeProject.customSectionTitle || "Key Learnings"} <span className="w-2 h-2 rounded-full bg-[#06b6d4]"></span>
+                      </h2>
+                      <ul className="space-y-3">
+                        {activeProject.customSectionContent.map((item: string, idx: number) => (
+                          <li key={idx} className="flex items-start gap-3 text-sm text-[#a1a1aa]">
+                            <span className="text-[#06b6d4] mt-0.5 text-lg leading-none">•</span> {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  )}
 
                 </div>
               </div>

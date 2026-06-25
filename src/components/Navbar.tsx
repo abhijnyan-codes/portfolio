@@ -2,11 +2,18 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 const NAV_ITEMS = ["About", "Projects", "Open Source", "Skills", "Contact"];
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  // 🚀 Hides the Navbar completely on the Command Center page
+  if (pathname === "/admin") {
+    return null;
+  }
 
   return (
     <>

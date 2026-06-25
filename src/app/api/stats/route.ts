@@ -14,29 +14,31 @@ async function getClient() {
   return redisClient;
 }
 
+// 1. The Single GET Route for fetching stats
 export async function GET() {
   try {
     if (!process.env.REDIS_URL) {
-      return NextResponse.json({ error: 'Missing REDIS_URL' });
+      return NextResponse.json({ error: 'Missing REDIS_URL' }, { status: 500 });
     }
 
     const client = await getClient();
     
-    // Fetch all your stats at once
-    const leetcode = await client.get('leetcode_count');
+    // Fetch your individual stats
+    const leetcode = await client.get('leetcode');
     const cgpa = await client.get('cgpa');
-    const projects = await client.get('projects_count');
     
+    // Return them in the format the Admin Dashboard expects
     return NextResponse.json({ 
-      leetcode: leetcode ? Number(leetcode) : 0,
-      cgpa: cgpa ? Number(cgpa) : 0,
-      projects: projects ? Number(projects) : 0
+      leetcode: leetcode || "",
+      cgpa: cgpa || ""
     });
   } catch (error) {
+    console.error("Redis stats fetch error:", error);
     return NextResponse.json({ error: "Failed to fetch stats" }, { status: 500 });
   }
 }
 
+// 2. The POST Route for saving updates
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -53,7 +55,7 @@ export async function POST(request: Request) {
 
     const client = await getClient();
 
-    // Loop through whatever data you "ticked" and update only those keys!
+    // Loop through whatever data you updated and save it
     for (const [key, value] of Object.entries(updates)) {
       await client.set(key, String(value));
     }
